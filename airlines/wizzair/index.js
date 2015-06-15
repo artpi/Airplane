@@ -1,30 +1,25 @@
-var system = require('system'),
-    args = system.args
-    utils = require('../utils.js');
-    Page = require('webpage');
+var utils = require('../../utils.js');
 
-
-
-function wizzair(src, dst, date) {
-    //TODO: VALIDACJA
+function wizzair(src, dst, date, callback) {
     var page = utils.page(),
-        server = 'https://wizzair.com/en-GB/FlightSearch';
+        server = 'https://wizzair.com/en-GB/FlightSearch',
+        date = utils.parseDate(date),
+        wizzDate = date.day + "/" +date.month + "/" + date.year;
 
-
-    //sHOWTIME
 	
 	function parseFlights($str) {
-		var da,
-			ret = [],
-			reg = /[a-zA-Z]+, ([0-9]+) ([a-zA-Z]+)\n([0-9][0-9]:[0-9][0-9]) → ([0-9][0-9]:[0-9][0-9])\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n/gi;
+		var da;
+		var	row;
+		var ret = [];
+		var reg = /[a-zA-Z]+, ([0-9]+) ([a-zA-Z]+)\n([0-9][0-9]:[0-9][0-9]) → ([0-9][0-9]:[0-9][0-9])\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n/gi;
 		
-		while($row = reg.exec($str)) {
-			da = "2015"+"-"+utils.monthNameToNumber($row[2])+"-"+$row[1]+" ";
+		while(row = reg.exec($str)) {
+			da = date.year+"-"+utils.monthNameToNumber(row[2])+"-"+row[1]+" ";
 			ret.push({
-				'start': da + $row[3],
-				'stop': da + $row[4],
-				'price': $row[5],
-				'price_discount': $row[6]
+				'start': da + row[3],
+				'stop': da + row[4],
+				'price': row[5],
+				'price_discount': row[6]
 			});
 		}
 		return ret;
@@ -38,10 +33,8 @@ function wizzair(src, dst, date) {
 				return txt;
 			});
 			ret = ret.concat(parseFlights(p1));
-			//console.log(id);
 			if(id >= 2) {
-				console.log(JSON.stringify(ret));
-				phantom.exit(0);
+				callback(ret);
 			} else {
 				nextFlights(id+1, ret);
 			}
@@ -72,11 +65,10 @@ function wizzair(src, dst, date) {
 				});
 				$("#ControlGroupRibbonAnonNewHomeView_AvailabilitySearchInputRibbonAnonNewHomeView_DepartureDate").datepicker("setDate", date);
 				$("#ControlGroupRibbonAnonNewHomeView_AvailabilitySearchInputRibbonAnonNewHomeView_ButtonSubmit").click();
-			}, src, dst, date);
+			}, src, dst, wizzDate);
 			nextFlights(0, ret);
-			
         }
     });
 };
 
-wizzair(args[1], args[2], args[3]);
+module.exports = wizzair;

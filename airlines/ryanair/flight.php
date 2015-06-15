@@ -17,7 +17,8 @@ for($i=0; $i<count($perms);$i++) {
 	toSQL($perms[$i][0], $perms[$i][1]);
 }
 
-	//$db = new PDO('mysql:host=artpi.pl;dbname=artpi_tools;charset=utf8', 'artpi_tools', 'L1KH8UjU');
+//$db=new PDO('mysql:host=artpi.pl;dbname=artpi_tools;charset=utf8', 'artpi_tools', 'L1KH8UjU');
+
 function parseDate($d) {
 	if($d["m"] == "cze") {
 		$m = "06";

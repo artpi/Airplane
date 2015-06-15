@@ -1,4 +1,4 @@
-Page = require('webpage');
+var Page = require('webpage');
 
 function mapMonth(month) {
     var mL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -27,7 +27,23 @@ function click(doc, el) {
     el.dispatchEvent(ev);
 }
 
+function parseDate(date) {
+	var arr = date.split("-");
+	return {
+		month: arr[1],
+		day: arr[2],
+		year: arr[0]
+	};
+}
+
+function getDate(y, m, d, h, m) {
+	return y + "-" + m + "-" + d + " " + h;
+}
+
+
 module.exports = {
+	getDate: getDate,
+	parseDate: parseDate,
 	clickEl: click,
 	monthNameToNumber: mapMonth,
 	page: function() {

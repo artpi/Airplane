@@ -1,11 +1,12 @@
-function mapMonth(month) {
-    var mL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var mS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var system = require('system');
+var args = system.args;
+var wizzair = require("./airlines/wizzair/index.js");
+var ryanair = require("./airlines/ryanair/index.js");
 
-    var m=mS.indexOf(month)+1;
-    if(m<10) {
-    	return "0"+m;
-    } else {
-    	return ""+m;
-  
-}
+//var ret = wizzair("WAW", "BGY", "28/08/2015");
+ryanair("aWMI", "BGY", "2015-07-28", function(elements) {
+	for (var i = 0; i < elements.length; i++) {
+		console.log(JSON.stringify(elements[i]));
+	};
+	phantom.exit(0);
+});
