@@ -1,26 +1,15 @@
 var system = require('system'),
     args = system.args
+    utils = require('../utils.js');
     Page = require('webpage');
 
 
-function mapMonth(month) {
-    var mL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    var m=mS.indexOf(month)+1;
-    if(m<10) {
-    	return '0'+m;
-    } else {
-    	return ''+m;
-    }
-}
 
 function wizzair(src, dst, date) {
     //TODO: VALIDACJA
-    var page = Page.create(),
+    var page = utils.page(),
         server = 'https://wizzair.com/en-GB/FlightSearch';
 
-	page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36';
 
     //sHOWTIME
 	
@@ -30,7 +19,7 @@ function wizzair(src, dst, date) {
 			reg = /[a-zA-Z]+, ([0-9]+) ([a-zA-Z]+)\n([0-9][0-9]:[0-9][0-9]) → ([0-9][0-9]:[0-9][0-9])\t(.*?)\t(.*?)\t(.*?)\t(.*?)\n/gi;
 		
 		while($row = reg.exec($str)) {
-			da = "2015"+"-"+mapMonth($row[2])+"-"+$row[1]+" ";
+			da = "2015"+"-"+utils.monthNameToNumber($row[2])+"-"+$row[1]+" ";
 			ret.push({
 				'start': da + $row[3],
 				'stop': da + $row[4],
